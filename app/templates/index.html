@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}Home | OpenReview{% endblock %}
+
+{% block content %}
+<div class="py-8">
+    <h1 class="text-2xl font-bold mb-2">OpenReview</h1>
+    <p class="text-gray-600 mb-6">Web application for peer review management. Built with Flask and Oracle 21c.</p>
+
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <a href="{{ url_for('list_conferences') }}" class="block border rounded p-4 hover:bg-gray-50">
+            <h2 class="font-semibold mb-1">Conferences</h2>
+            <p class="text-sm text-gray-500">Browse all conferences and view accepted articles.</p>
+        </a>
+        <a href="{{ url_for('submit_review') }}" class="block border rounded p-4 hover:bg-gray-50">
+            <h2 class="font-semibold mb-1">Submit Review</h2>
+            <p class="text-sm text-gray-500">Submit scores and comments for an assigned article.</p>
+        </a>
+        <div class="border rounded p-4">
+            <h2 class="font-semibold mb-1">Reviewer Assignments</h2>
+            <p class="text-sm text-gray-500">Go to <code>/reviewer/&lt;code&gt;/assignments</code> to see assigned papers.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

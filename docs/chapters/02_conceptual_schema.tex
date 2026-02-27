@@ -1,0 +1,243 @@
+\chapter{Conceptual Design}
+\label{ch:conceptual_design}
+
+In this chapter we build the conceptual schema using the Entity-Relationship (ER) model. We start with a skeleton that shows only the main entities and their connections, then we add attributes, cardinalities, and generalizations step by step.
+
+\section{Design Strategy}
+\label{sec:design_strategy}
+
+We use a hybrid approach: first we draw the skeleton, then we add all the details (attributes, constraints) to get the complete ER diagram.
+
+\section{Skeleton of the ER Schema}
+\label{sec:er_skeleton}
+
+Before adding attributes, we drew a skeleton that shows only the entities and their relationships. Figure~\ref{fig:er_skeleton} is our starting point.
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=\textwidth]{images/schemas/er_skeleton_schema.pdf}
+\caption{Skeleton Entity-Relationship diagram.}
+\label{fig:er_skeleton}
+\end{figure}
+
+\subsection{Reading the Skeleton}
+
+The skeleton has four groups of entities. Below we explain each group.
+
+\paragraph{Conference.}
+Conference is the central entity. Everything connects to it. Sponsors fund conferences through the Sponsorship relationship (many-to-many, a conference can have zero sponsors). Organizers form the program committee through the Membership relationship (each conference needs at least 2 organizers).
+
+\begin{reasoningbox}
+Conference is the central entity because articles, reviews, research areas, and organizers all exist in the context of a conference.
+\end{reasoningbox}
+
+\paragraph{Research Areas and the Indication Entity.}
+
+This part needs attention because the specification is ambiguous. Let us look at the text:
+
+\begin{tracebox}
+``Each organizer may indicate, for each conference in which they participate as a program committee member, one or more research areas denoted by an acronym and a description.''
+\end{tracebox}
+
+There is also a second related sentence:
+
+\begin{tracebox}
+``Based on the specified research area, articles are assigned to program committee members [\ldots] who must prepare a review.''
+\end{tracebox}
+
+These two sentences create an ambiguity. The first says organizers \emph{indicate} research areas. The second says articles are assigned to reviewers \emph{based on} research areas. So research areas are used in two ways: organizers declare them, and they are used to match articles with reviewers.
+
+The key word is ``indicate''. We interpret it as: when an organizer indicates a research area for a conference, they are defining which topics the conference covers. It is an act of categorization, not just a preference.
+
+This is why Research Area Indication is a separate entity. Each indication connects three things:
+\begin{itemize}
+    \item a specific \textbf{Organizer} (who makes the indication),
+    \item a specific \textbf{Conference} (the context in which the indication happens),
+    \item a specific \textbf{Research Area} (the general domain being indicated).
+\end{itemize}
+
+\begin{reasoningbox}
+An organizer in the committee must indicate at least one area. Without areas, there would be no topics and no way to assign articles for review. The indication is what gives structure to the conference.
+\end{reasoningbox}
+
+Without this bridge entity, we would have a ternary relationship between Organizer, Conference, and Research Area. Ternary relationships are hard to read and hard to turn into tables. The bridge entity breaks the three-way link into three binary relationships: \emph{Organizer Area Indication}, \emph{Conference Research Area}, and \emph{Research Area Instance Of}.
+
+\begin{reasoningbox}
+One could argue that we should reify the Membership relationship itself (make it a full entity with the organizer--conference pair, and attach research areas to it). The author of the specification probably had this in mind. But we chose not to do that because: (1) it would make the ER diagram harder to read, and (2) the specification does not explicitly ask for a complex membership structure. We prefer to keep things simple.
+\end{reasoningbox}
+
+\paragraph{Articles, Authors, and Partners.}
+An Article is submitted to exactly one Conference. It has one or more Authors, and one of them is the contact author (who receives review feedback). Articles belong to one of five categories: Tutorial, Short Paper, Poster, Industrial Paper, Research Paper. Only Industrial Papers can have Partners.
+
+\begin{reasoningbox}
+We model the contact author as a separate relationship (Contact Designation) instead of a flag on Authorship. This way the constraint ``exactly one contact per article'' is visible in the ER diagram.
+\end{reasoningbox}
+
+\paragraph{Reviews and Reviewers.}
+A Review is the evaluation that a reviewer writes for an article. It contains scores and comments. Reviewer is a partial specialization of Organizer: every reviewer is an organizer, but not every organizer reviews. The reviewer role is determined by the Review relationship --- no flag is needed.
+
+\begin{reasoningbox}
+The specification mentions ``communications'' to the contact author. But the only communication worth storing is the Review (with scores and comments). Emails and notifications do not need to be in the database. So we use the Review entity for this.
+\end{reasoningbox}
+
+\newpage
+
+\subsection{From the Skeleton to the Full Diagram}
+
+After the skeleton, we added primary keys, attributes, and relationship properties to get the complete ER diagram (Figure~\ref{fig:er_diagram}).
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=\textwidth]{images/schemas/er_schema.pdf}
+\caption{Complete Entity-Relationship diagram for ConferenceHub Inc.}
+\label{fig:er_diagram}
+\end{figure}
+
+\clearpage
+
+\section{List of Components in the ER}
+\label{sec:list_of_components}
+
+Here we list all entities and relationships in the ER diagram.
+
+\subsection{Entities}
+
+Table~\ref{tab:entities} lists each entity with its attributes and primary key.
+
+\begin{table}[!ht]
+\centering
+\caption{Entities and their attributes.}
+\label{tab:entities}
+\footnotesize
+\begin{tabularx}{\textwidth}{@{} l X l @{}}
+  \toprule
+  Entity & Attributes & Identifier (PK) \\
+  \midrule
+  Conference                & acronym, name, location, homepage URL                                                             & acronym                       \\[2pt]
+  Sponsor                   & name                                                                                               & name                          \\[2pt]
+  Organizer                 & code, name, affiliation, address, phone, email                                                    & code                          \\[2pt]
+  Reviewer                  & \emph{(inherits from Organizer)}                                                                  & code (inherited)              \\[2pt]
+  Research Area Indication  & (no own attributes; identified by composite FK)                                                    & (composite from FKs)          \\[2pt]
+  Research Area             & acronym, description                                                                              & acronym                       \\[2pt]
+  Article                   & seq.\ number, title, category, status, avg\_global\_score                                         & (conference, seq.\ number)    \\[2pt]
+  Author                    & code, name, affiliation, address, phone, email                                                    & code                          \\[2pt]
+  Review                    & code, date, content, originality, significance, quality, global score, comments                   & code                          \\[2pt]
+  Partner                   & code, name, address                                                                               & code                          \\
+  \bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{infobox}
+The entity Reviewer is a \emph{partial specialization} of Organizer: not every organizer reviews articles, but every reviewer is an organizer. The reviewer role is determined by the existence of a Review relationship linking the organizer to an article.
+\end{infobox}
+
+\subsection{Relationships}
+
+Table~\ref{tab:relationships} lists each relationship with its participating entities and cardinalities.
+
+\begin{table}[!ht]
+\centering
+\caption{Relationships, participating entities, and cardinalities.}
+\label{tab:relationships}
+\scriptsize
+\begin{tabularx}{\textwidth}{@{} l l l c c X @{}}
+  \toprule
+  Relationship & Entity 1 & Entity 2 & Card.\ E1 & Card.\ E2 & Attrs. \\
+  \midrule
+  Sponsorship               & Sponsor     & Conference           & (1,N)  & (0,N)  & funding date, funded amt.   \\[2pt]
+  Membership                & Organizer   & Conference           & (1,N)  & (2,N)  & ---                         \\[2pt]
+  Org.\ Area Indication     & Organizer   & Res.\ Area Ind.      & (1,N)  & (1,1)  & ---                         \\[2pt]
+  Conf.\ Research Area      & Conference  & Res.\ Area Ind.      & (1,N)  & (1,1)  & ---                         \\[2pt]
+  Res.\ Area Instance Of    & Res.\ Area Ind. & Research Area    & (1,1)  & (1,N)  & ---                         \\[2pt]
+  Article Area Indication   & Article     & Research Area        & (1,N)  & (0,N)  & ---                         \\[2pt]
+  Submission                & Article     & Conference           & (1,1)  & (0,N)  & ---                         \\[2pt]
+  Authorship                & Author      & Article              & (1,N)  & (1,N)  & ---                         \\[2pt]
+  Contact Designation       & Author      & Article              & (0,N)  & (1,1)  & ---                         \\[2pt]
+  About                     & Review      & Article              & (1,1)  & (2,4)  & ---                         \\[2pt]
+  Review Assignment         & Review      & Reviewer             & (1,1)  & (1,N)  & ---                         \\[2pt]
+  Contribution              & Partner     & Article              & (1,N)  & (0,N)  & ---                         \\
+  \bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{infobox}
+The \emph{Research Area Indication} bridge entity breaks the implicit ternary relationship between Organizer, Conference, and Research Area into three binary associations. Each indication records that a specific organizer declared a specific research area within the context of a specific conference.
+\end{infobox}
+
+\newpage
+
+\section{Generalizations}
+
+Two generalizations have been identified:
+
+\begin{itemize}
+  \item \textbf{Reviewer} is a \emph{partial (P)} specialization of \textbf{Organizer}.
+  \begin{itemize}
+    \item Every reviewer inherits all attributes of Organizer (code, name, affiliation, address, phone, email).
+    \item Not all organizers are reviewers; only those actually assigned to review articles hold the reviewer role.
+    \item The specialization is linked to the \emph{Review Assignment} relationship.
+  \end{itemize}
+
+  \item \textbf{Article} has a \emph{total, exclusive (T,E)} generalization into five subtypes:
+  \begin{itemize}
+    \item \textbf{Tutorial}, \textbf{Short Paper}, \textbf{Poster}, \textbf{Industrial Paper}, \textbf{Research Paper}.
+    \item Every article belongs to exactly one category (total coverage, exclusive membership).
+    \item Only Industrial Papers may have associated Partners via the \emph{Contribution} relationship.
+  \end{itemize}
+\end{itemize}
+
+\section{Design Choices}
+\label{sec:design_choices}
+
+Here we explain the main design decisions.
+
+\begin{reasoningbox}
+The requirements mention ``communications'' to the contact author. At first this seems like a separate entity, but the only real structured communication is the Review. Emails and notifications are transient. So we use the Review entity for this and keep the schema simple.
+\end{reasoningbox}
+
+\begin{reasoningbox}
+Program committee members can be assigned to review articles. Instead of a separate Reviewer entity, we model Reviewer as a partial specialization of Organizer. Every reviewer is an organizer, but not every organizer reviews. The reviewer role is determined by whether the organizer has reviews assigned --- no flag is needed.
+\end{reasoningbox}
+
+\begin{reasoningbox}
+Each organizer can indicate research areas for each conference. This is naturally a three-way relationship. To avoid a ternary relationship, we use the bridge entity Research Area Indication, which splits it into three binary relationships.
+\end{reasoningbox}
+
+\begin{reasoningbox}
+Articles have five categories. Every article belongs to exactly one, so the generalization is total and exclusive (T,E). The Contribution relationship (with Partner) is attached only to Industrial Paper.
+\end{reasoningbox}
+
+\begin{reasoningbox}
+Instead of a boolean flag on Authorship, we use a separate Contact Designation relationship. This makes the ``exactly one contact per article'' constraint visible in the ER diagram.
+\end{reasoningbox}
+
+\begin{reasoningbox}
+Some entities do not have a natural unique identifier. Names and emails can be duplicated, so we use artificial \texttt{code} attributes for Organizer, Author, Partner, and Review. Conference uses its \texttt{acronym} as a natural key. Articles use a composite key: (conference, seq\_number).
+\end{reasoningbox}
+
+\clearpage
+
+\section{Business Rules}
+\label{sec:business_rules}
+
+These are the constraints that the ER diagram alone cannot express. We enforce them with triggers or CHECK constraints.
+
+\begin{infobox}
+Rules labeled (T) are enforced via PL/SQL triggers. Rules labeled (C) are enforced via inline \texttt{CHECK} constraints or foreign key design.
+\end{infobox}
+
+\begin{enumerate}[label=\textbf{BR\arabic*}, leftmargin=3em, itemsep=4pt]
+  \item \textbf{Maximum reviewer cardinality (T).} Each article can be assigned to at most 4 reviewers.
+  \item \textbf{Reviewer conference membership (T).} A reviewer assigned to an article must be a member of the program committee of the conference to which the article was submitted.
+  \item \textbf{Research area compatibility (T).} A reviewer should only be assigned to articles whose research areas overlap with the areas they declared for that conference.
+  \item \textbf{Score range (C).} All scores (originality, significance, quality, global score) are integers in the range $[0, 10]$.
+  \item \textbf{Review completion for status change (T).} The status of an article can only change from \texttt{pending} after all assigned reviews have been submitted (all reviews have a \texttt{global\_score}).
+  \item \textbf{Minimum reviews for status change (T).} The status of an article cannot change from \texttt{pending} without at least 2 completed reviews.
+  \item \textbf{Single conference submission (C).} An article can be submitted to exactly one conference.
+  \item \textbf{Contact author subset (T).} The contact author of an article must also be one of the authors of that article (Contact Designation $\subseteq$ Authorship).
+  \item \textbf{Minimum committee size (T).} Each conference must have at least 2 organizers in its program committee.
+  \item \textbf{Positive sponsorship amount (C).} The funded amount in a sponsorship record must be strictly positive.
+  \item \textbf{Acceptance score threshold (T).} An article can only be set to \texttt{accepted} if its \texttt{avg\_global\_score} $\geq 5$.
+  \item \textbf{Industrial paper partner exclusivity (T).} Only articles with category \texttt{Industrial Paper} can have partner contributions.
+  \item \textbf{Average score redundancy maintenance (T).} The redundant attribute \texttt{avg\_global\_score} in Article is automatically recalculated whenever a review's \texttt{global\_score} is inserted, updated, or deleted.
+\end{enumerate}

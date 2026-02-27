@@ -1,0 +1,10 @@
+# exclude non-essential files from docker build context
+.git/
+.github/
+docs/
+*.md
+__pycache__/
+*.pyc
+app/venv/
+app/setup.bat
+app/start_server.bat

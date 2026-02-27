@@ -1,0 +1,43 @@
+# LaTeX build artifacts
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.synctex.gz
+*.nav
+*.snm
+*.vrb
+*.bcf
+*.run.xml
+*.idx
+*.ilg
+*.ind
+
+# Compiled PDF (keep source, not output)
+# Uncomment next line to exclude PDFs:
+# *.pdf
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Editor files
+*.swp
+*.swo
+*~
+.vscode/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Submodule / external
+oracle_db/

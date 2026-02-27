@@ -1,0 +1,128 @@
+\chapter{Web Application Architecture}
+\label{ch:web_app}
+
+This chapter describes the web application built on top of the Oracle database. The application is a simple Flask web server that calls stored procedures and displays results in HTML pages. All business logic stays in the database.
+
+\section{Architecture Overview}
+
+The application uses a three-tier architecture:
+
+\begin{itemize}[itemsep=4pt]
+    \item \textbf{Presentation Tier}: HTML pages rendered with Jinja2 templates, styled with Tailwind CSS.
+    \item \textbf{Application Tier}: Flask web server that routes HTTP requests to Oracle procedures.
+    \item \textbf{Data Tier}: Oracle 21c database with tables, triggers, and stored procedures.
+\end{itemize}
+
+\section{Flask Implementation}
+
+\subsection{Database Connection}
+
+Flask connects to Oracle using the \texttt{python-oracledb} library in thin mode (no Oracle Client needed). Each HTTP request gets its own connection stored in Flask's \texttt{g} object:
+
+\begin{lstlisting}[language=Python, basicstyle=\ttfamily\small]
+def get_db():
+    if 'db' not in g:
+        g.db = oracledb.connect(
+            user=DB_USER,
+            password=DB_PASS,
+            dsn=DB_DSN
+        )
+    return g.db
+
+@app.teardown_appcontext
+def close_connection(exception):
+    db = g.pop('db', None)
+    if db is not None:
+        db.close()
+\end{lstlisting}
+
+\subsection{Routes and SQL Procedures}
+
+The application has five routes that map to database operations:
+
+\begin{table}[!ht]
+\centering
+\caption{Flask routes and database operations.}
+\label{tab:routes}
+\small
+\begin{tabularx}{\textwidth}{@{} l l X @{}}
+  \toprule
+  URL & Procedure & Description \\
+  \midrule
+  \texttt{/}                          & ---                             & Home page \\
+  \texttt{/conferences}               & direct SQL                      & List all conferences \\
+  \texttt{/conference/<acr>/...}      & \texttt{prc\_get\_accepted\_articles} & OP4: Accepted articles \\
+  \texttt{/submit-review}             & \texttt{prc\_add\_review}       & OP3: Submit a review \\
+  \texttt{/reviewer/<code>/...}       & \texttt{prc\_get\_reviewer\_assignments} & OP2: Reviewer assignments \\
+  \bottomrule
+\end{tabularx}
+\end{table}
+
+Flask calls stored procedures using \texttt{cursor.callproc()} and retrieves results via \texttt{SYS\_REFCURSOR}. For example, OP4 (accepted articles) works as follows:
+
+\begin{lstlisting}[language=Python, basicstyle=\ttfamily\small]
+ref = cur.var(oracledb.CURSOR)
+cur.callproc('prc_get_accepted_articles', [acronym, ref])
+articles = ref.getvalue().fetchall()
+\end{lstlisting}
+
+The procedure returns a cursor that Flask converts to a list of rows, which are then passed to the Jinja2 template for rendering.
+
+\section{Docker Deployment}
+
+The entire stack runs in Docker with two containers orchestrated by Docker Compose:
+
+\begin{itemize}[itemsep=4pt]
+    \item \textbf{oracle-xe}: Oracle Database 21c Express Edition. Data persists in a named volume (\texttt{oracle-data}).
+    \item \textbf{web}: Flask application built from \texttt{app/Dockerfile}. The \texttt{sql/} folder is mounted read-only.
+\end{itemize}
+
+\subsection{Startup Process}
+
+The \texttt{entrypoint.sh} script in the web container:
+\begin{enumerate}[itemsep=3pt]
+    \item Waits for Oracle to be ready (retry loop with 5-second intervals)
+    \item Executes \texttt{00\_full\_setup.sql} to create tables, triggers, procedures, and test data
+    \item Starts Gunicorn WSGI server with 2 worker processes on port 5000
+\end{enumerate}
+
+\subsection{Running the Application}
+
+From the project root:
+\begin{highlightbox}
+\texttt{docker compose up --build}
+\end{highlightbox}
+
+The application is available at \texttt{http://localhost:5000}. First startup takes 3--5 minutes while Oracle initializes.
+
+\section{Screenshots}
+
+Below are some screenshots of the running application.
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=0.9\textwidth]{images/app/get_conferences.png}
+\caption{Conferences listing page.}
+\label{fig:app_conferences}
+\end{figure}
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=0.9\textwidth]{images/app/get_articles_for_conference.png}
+\caption{Accepted articles for a conference.}
+\label{fig:app_articles}
+\end{figure}
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=0.9\textwidth]{images/app/submit.png}
+\caption{Submit review form.}
+\label{fig:app_submit}
+\end{figure}
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=0.9\textwidth]{images/app/get_articles_for_conference_after_review.png}
+\caption{Accepted articles after reviews are submitted.}
+\label{fig:app_articles_after}
+\end{figure}

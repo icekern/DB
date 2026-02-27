@@ -1,0 +1,319 @@
+\chapter{Logical Design}
+\label{ch:logical_design}
+
+In this chapter we analyze the workload of each operation and build the logical schema. We also check if storing a redundant attribute is worth the extra cost.
+
+\section{Relationship and entity workload}
+
+\begin{infobox}
+The volume table below shows the expected data sizes. The population script in Chapter~4 uses these same numbers.
+\end{infobox}
+
+
+\begin{table}[!ht]
+\centering
+\caption{Table of Volumes}
+\label{tab:volumes}
+\small
+\begin{tabularx}{\textwidth}{@{} l l l X @{}}
+  \toprule
+  NAME & TYPE & VOLUME & WHY \\
+  \midrule
+  SPONSOR                  & ENTITY & 20    & Distinct companies. \\
+  CONFERENCE               & ENTITY & 100    & Estimated base number. \\
+  ORGANIZER                & ENTITY & 400   & Estimated number \\
+  REVIEWER                 & ENTITY & 300    & Some organizers also review \\
+  AUTHOR                   & ENTITY & 3600  & Estimated number of authors. \\
+  ARTICLE                  & ENTITY & 1200  & $\sim 120$ submissions/event. \\
+  INDUSTRIAL PAPER         & ENTITY & 240   & $20\%$ of all articles. \\
+  TUTORIAL                 & ENTITY & 120   & $10\%$ of all articles. \\
+  SHORT PAPER              & ENTITY & 600   & $50\%$ of all articles. \\
+  POSTERS                  & ENTITY & 120   & $10\%$ of all articles. \\
+  RESEARCH PAPERS          & ENTITY & 120   & $10\%$ of all articles. \\
+  REVIEW                   & ENTITY & 3600  & Exactly 3 reviews/article. \\
+  PARTNER                  & ENTITY & 480   & Distinct companies. \\
+  RESEARCH AREA            & ENTITY & 20     & Scientific domains. \\
+  RESEARCH AREA INDICATION & ENTITY & 1200   & $\sim 3$ areas per organizer. \\
+  SPONSORSHIP              & RELATIONSHIP & 500   & $\sim 5$ sponsors per conference, 2.5 sponsors per sponsor on average \\
+  MEMBERSHIP               & RELATIONSHIP & 800  & $\sim 2$ conference per organizer on average (8 per conference) \\
+  SUBMISSION               & RELATIONSHIP & 1200 & Each article is submitted to 1 conference \\
+  AUTHORSHIP               & RELATIONSHIP & 3600 & $\sim 3$ authors/article. \\
+  CONTACT DESIGNATION      & RELATIONSHIP & 1200 & There is only a single contact designation for each article \\
+  CONTRIBUTION             & RELATIONSHIP & 480  & 2 partners per ind. paper. \\
+  ABOUT                    & RELATIONSHIP & 3600 & Each review is associated to a single article \\
+  REVIEW ASSIGNMENT        & RELATIONSHIP & 3600 & Each review is made by a reviewer \\
+  ARTICLE AREA INDICATION  & RELATIONSHIP & 2400 & $\sim 2$ areas per article. \\
+  CONFERENCE RESEARCH AREA & RELATIONSHIP & 1200  & Each research area indication is associated to a single conference. \\
+  ORGANIZER AREA INDICATION& RELATIONSHIP & 1200  & Each research area indication is associated to a single organizer. \\
+  RESEARCH AREA INSTANCE OF& RELATIONSHIP & 1200  & Each research area indication is associated to a single research area. \\
+  \bottomrule
+\end{tabularx}
+\end{table}
+
+\clearpage
+
+\section{Table of operations}
+
+Here we calculate the cost of each operation. A Read access costs 1, a Write access costs 2. The daily cost is:
+\[ TOTAL\_COST = COST \times FREQUENCY \]
+
+\begin{table}[!ht]
+\centering
+\caption{Operations and frequencies}
+\label{tab:operations}
+\small
+\begin{tabularx}{0.8\textwidth}{@{} X c l @{}}
+  \toprule
+  OPERATION NAME & TYPE & FREQUENCY \\
+  \midrule
+  OP 1 & I & 50 t/day \\
+  OP 2 & I & 40 t/day \\
+  OP 3 & I & 80 t/day \\
+  OP 4 & I & 10 t/day \\
+  \bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Operation 1}
+
+\textit{Insert a new article submission to a conference, including title, category, and the list of authors with their contact information.} \\
+
+\begin{infobox}
+This operation writes 1 Article, 1 Submission, 3 Authorship rows, and 1 Contact Designation. It reads Conference and Author to validate foreign keys.
+\end{infobox}
+
+\begin{table}[!ht]
+\centering
+\small
+\begin{tabularx}{0.8\textwidth}{@{} l c c l @{}}
+  \toprule
+  NAME & TYPE & ACCESS TYPE & ACCESS \\
+  \midrule
+  ARTICLE              & E & W & 1 \\
+  SUBMISSION           & R & W & 1 \\
+  CONFERENCE           & E & R & 1 \\
+  AUTHORSHIP           & R & W & 3 \\
+  AUTHOR               & E & R & 3 \\
+  CONTACT DESIGNATION  & R & W & 1 \\
+  AUTHOR               & E & R & 1 \\
+  \bottomrule
+\end{tabularx}
+\end{table}
+
+\[ COST = 2 + 2 + 1 + 6 + 3 + 2 + 1 = 17 \]
+\[ TOTAL\_COST = 17 \times 50 = 850 \text{ acc/day} \]
+
+\subsection{Operation 2}
+
+\textit{For each program committee member, print the list of articles assigned for review, including article title, category, and the names of all authors.} \\
+
+\begin{infobox}
+Read-heavy operation. For each of the 200 reviewers, we read their assignments, the articles, and the authors. This leads to a high access count.
+\end{infobox}
+
+\begin{table}[!ht]
+\centering
+\small
+\begin{tabularx}{0.8\textwidth}{@{} l c c l @{}}
+  \toprule
+  NAME & TYPE & ACCESS TYPE & ACCESS \\
+  \midrule
+  REVIEWER             & E & R & 200 \\
+  REVIEW ASSIGNMENT    & R & R & 3600 \\
+  REVIEW               & E & R & 3600 \\
+  ABOUT                & R & R & 3600 \\
+  ARTICLE              & E & R & 3600 \\
+  AUTHORSHIP           & R & R & 10800 \\
+  AUTHOR               & E & R & 10800 \\
+
+  \bottomrule
+\end{tabularx}
+\end{table}
+
+\[ COST = 200 + 3600 + 3600 + 3600 + 3600 + 10800 + 10800 = 36200 \]
+\[ TOTAL\_COST = 36200 \times 40 = 1{,}448{,}000 \text{ acc/day} \]
+
+\newpage
+
+\subsection{Operation 3}
+
+\textit{Insert a new review for an article, including scores for originality, significance, quality, global score, and comments.} \\
+Assuming we already know the article and the reviewer.
+
+\begin{infobox}
+Simple write: insert one review and link it to the article and reviewer.
+\end{infobox}
+
+\begin{table}[!ht]
+\centering
+\small
+\begin{tabularx}{0.8\textwidth}{@{} l c c l @{}}
+  \toprule
+  NAME & TYPE & ACCESS TYPE & ACCESS \\
+  \midrule
+  REVIEW               & E & W & 1 \\
+  ABOUT                & R & W & 1 \\
+  ARTICLE              & E & R & 1 \\
+  REVIEW ASSIGNMENT    & R & W & 1 \\
+  REVIEWER             & E & R & 1 \\
+
+  \bottomrule
+\end{tabularx}
+\end{table}
+
+\[ COST = 2+2+1+2+1=8 \]
+\[ TOTAL\_COST = 8 \times 80 = 640 \text{ acc/day} \]
+
+\subsection{Operation 4}
+
+\textit{For each conference, print the list of all accepted articles grouped by category, including title, contact author name and email, and average global score.} \\
+
+\begin{infobox}
+Reads conferences, articles, and for accepted articles the contact author. Without a cached average score, we would also need to read all reviews. The redundancy analysis below evaluates this trade-off.
+\end{infobox}
+
+\begin{table}[!ht]
+\centering
+\small
+\begin{tabularx}{0.8\textwidth}{@{} l c c l @{}}
+  \toprule
+  NAME & TYPE & ACCESS TYPE & ACCESS \\
+  \midrule
+  CONFERENCE           & E & R & 100 \\
+  SUBMISSION           & R & R & 1200 \\
+  ARTICLE              & E & R & 1200 \\
+  CONTACT DESIGNATION  & R & R & 600 \\
+  AUTHOR               & E & R & 600 \\
+  ABOUT                & R & R & 1800 \\
+  REVIEW               & E & R & 1800 \\
+  \bottomrule
+\end{tabularx}
+\end{table}
+
+\[ COST = 100 + 1200 + 1200 + 600 + 600 + 1800 + 1800 = 7300 \]
+\[ TOTAL\_COST = 7300 \times 10 = 73{,}000 \text{ acc/day} \]
+
+\clearpage
+
+\section{Analysis of the redundancies}
+
+\begin{infobox}
+We compare the daily cost with and without a cached attribute. If the read savings are much bigger than the extra write cost, the redundancy is worth it.
+\end{infobox}
+
+We check if it is better to calculate the average score on the fly during OP4 or to store it as a redundant attribute (\texttt{avg\_global\_score}) in Article.
+
+\subsection{Without redundancy}
+The average is calculated at runtime during OP4.
+\begin{itemize}
+    \item \textbf{OP 4 Cost}: Fetching 3 reviews for each of the 600 accepted articles costs $1800 + 1800 = 3600 \text{ acc/day}$. Multiplied by 10 daily iterations: $36{,}000 \text{ acc/day}$ just for reading reviews.
+    \item \textbf{OP 3 Cost}: Writing a new review costs $8 \text{ acc/day}$. No extra work. Multiplied by 80 iterations: $640 \text{ acc/day}$.
+\end{itemize}
+
+\subsection{With redundancy}
+A redundant attribute \texttt{avg\_global\_score} is stored in Article.
+\begin{itemize}
+    \item \textbf{OP 4 Cost}: The scores are already cached in the article rows. We skip reading ABOUT and REVIEW entirely. Savings: $36{,}000 \text{ acc/day}$.
+    \item \textbf{OP 3 Cost}: Every time a review is added, we must update the parent Article score. This requires reading the 2 remaining sibling reviews to rebuild the average (1 read for ABOUT, 2 reads for REVIEW = cost 3) plus 1 write on ARTICLE (cost 2). Extra overhead: $5 \times 80 = 400 \text{ acc/day}$.
+\end{itemize}
+
+\subsection{Conclusion}
+Read savings on OP4: $36{,}000$ acc/day. Write overhead on OP3: $400$ acc/day. Since $36{,}000 \gg 400$, the redundancy is clearly worth it.
+
+\section{Partitioning and merging}
+
+Here we merge the specializations into their parent entities. Reviewer is absorbed into Organizer, and all Article subtypes (Industrial Paper, Tutorial, etc.) are merged into a single Article table with a \texttt{category} attribute to tell them apart.
+
+\section{Choice of main identifier}
+
+Many entities do not have a natural unique attribute. Names can be duplicated and emails can change. Here are our choices:
+
+\begin{itemize}
+    \item \textbf{Organizer, Author, Partner, Review}: artificial \texttt{code} as primary key (e.g., \texttt{ORG\_1\_2}, \texttt{A\_42}). We use strings instead of numbers to make the data more readable during testing.
+
+    \item \textbf{Conference}: uses its \texttt{acronym} as natural key (e.g., ``ICSE'', ``VLDB'').
+
+    \item \textbf{Article}: composite key \texttt{(conference\_acronym, seq\_number)}. In the physical schema we also add a surrogate \texttt{article\_id} to simplify foreign keys.
+
+    \item \textbf{Research Area}: uses \texttt{area\_acronym} as natural key (e.g., ``DB\_SYS'', ``AI'').
+
+    \item \textbf{Research Area Indication}: composite key from its three foreign keys: \texttt{(organizer\_code, conference\_acronym, area\_acronym)}.
+
+    \item \textbf{Sponsor}: uses \texttt{name} as primary key.
+\end{itemize}
+
+\clearpage
+
+\section{Logic schema}
+
+The final schema with the redundancy included:
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=0.95\textwidth]{images/schemas/uml_schema.pdf}
+\caption{UML logical representation defining Object-Relational types.}
+\label{fig:uml_schema}
+\end{figure}
+
+\clearpage
+
+\section{Relational Schema}
+
+Below is the textual representation of the logical schema, after all transformations.
+
+\begin{infobox}
+Notation: \underline{underlined} attributes form the primary key. \textit{Italic} attributes are foreign keys. Composite primary keys span multiple underlined columns.
+\end{infobox}
+
+\begin{enumerate}[leftmargin=1.5em, itemsep=10pt, label={}]
+
+  \item \textbf{Conference}(\underline{acronym}, name, location, homepage\_url)
+
+  \item \textbf{Sponsor}(\underline{name})
+
+  \item \textbf{Sponsorship}(\underline{\textit{sponsor\_name}}, \underline{\textit{conference\_acronym}}, funding\_date, funded\_amount) \\
+        \small FK: sponsor\_name $\rightarrow$ Sponsor(name) \quad FK: conference\_acronym $\rightarrow$ Conference(acronym)
+
+  \item \textbf{Organizer}(\underline{code}, name, affiliation, address, phone, email)
+
+  \item \textbf{Membership}(\underline{\textit{organizer\_code}}, \underline{\textit{conference\_acronym}}) \\
+        \small FK: organizer\_code $\rightarrow$ Organizer(code) \quad FK: conference\_acronym $\rightarrow$ Conference(acronym)
+
+  \item \textbf{ResearchArea}(\underline{area\_acronym}, area\_name, description)
+
+  \item \textbf{AreaIndication}(\underline{\textit{organizer\_code}}, \underline{\textit{conference\_acronym}}, \underline{\textit{area\_acronym}}) \\
+        \small FK: organizer\_code $\rightarrow$ Organizer(code) \quad FK: conference\_acronym $\rightarrow$ Conference(acronym) \\
+        \small FK: area\_acronym $\rightarrow$ ResearchArea(area\_acronym) \\
+        \small Constraint: (organizer\_code, conference\_acronym) $\in$ Membership
+
+  \item \textbf{Author}(\underline{code}, name, affiliation, address, phone, email)
+
+  \item \textbf{Article}(\underline{article\_id}, \textit{conference\_acronym}, seq\_number, title, category, status, avg\_global\_score, \textit{contact\_author\_code}) \\
+        \small FK: conference\_acronym $\rightarrow$ Conference(acronym) \quad FK: contact\_author\_code $\rightarrow$ Author(code) \\
+        \small Unique: (conference\_acronym, seq\_number)
+
+  \item \textbf{Authorship}(\underline{\textit{article\_id}}, \underline{\textit{author\_code}}) \\
+        \small FK: article\_id $\rightarrow$ Article(article\_id) \quad FK: author\_code $\rightarrow$ Author(code)
+
+  \item \textbf{ArticleAreaIndication}(\underline{\textit{article\_id}}, \underline{\textit{area\_acronym}}) \\
+        \small FK: article\_id $\rightarrow$ Article(article\_id) \quad FK: area\_acronym $\rightarrow$ ResearchArea(area\_acronym)
+
+  \item \textbf{Partner}(\underline{code}, name, address)
+
+  \item \textbf{Contribution}(\underline{\textit{article\_id}}, \underline{\textit{partner\_code}}) \\
+        \small FK: article\_id $\rightarrow$ Article(article\_id) where category = `Industrial Paper' \\
+        \small FK: partner\_code $\rightarrow$ Partner(code)
+
+  \item \textbf{Review}(\underline{code}, review\_date, content, originality, significance, quality, global\_score, comments, \textit{article\_id}, \textit{reviewer\_code}) \\
+        \small FK: article\_id $\rightarrow$ Article(article\_id) \quad FK: reviewer\_code $\rightarrow$ Organizer(code)
+
+\end{enumerate}
+
+\begin{infobox}
+\begin{itemize}[itemsep=2pt]
+  \item avg\_global\_score in Article is a derived redundant attribute, justified by the redundancy analysis in Section~3.3.
+  \item The Reviewer specialization is resolved through the Review relationship: any organizer who has a review assigned is effectively a reviewer. No flag is needed.
+  \item Article subtypes (Tutorial, Short Paper, etc.) are merged into a single Article table via the category attribute.
+  \item The AreaIndication bridge keeps the original ternary decomposition through a three-component composite primary key.
+\end{itemize}
+\end{infobox}

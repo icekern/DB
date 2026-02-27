@@ -1,0 +1,46 @@
+# LaTeX generated files
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.synctex.gz
+*.synctex(busy)
+*.nav
+*.snm
+*.vrb
+*.bcf
+*.run.xml
+*.idx
+*.ilg
+*.ind
+*.glo
+*.gls
+*.glg
+*.ist
+*.acn
+*.acr
+*.alg
+
+# PDF output (uncomment if you want to track PDFs)
+# *.pdf
+
+# Editor files
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Temporary files
+*.tmp
+*.bak

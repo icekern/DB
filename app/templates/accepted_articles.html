@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}Accepted Articles — {{ acronym }}{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-between mb-4">
+    <h1 class="text-xl font-bold">Accepted Articles — {{ acronym }}</h1>
+    <a href="{{ url_for('list_conferences') }}" class="text-sm text-blue-600 hover:underline">&larr; Back</a>
+</div>
+
+<table class="w-full text-sm border">
+    <thead class="bg-gray-50 text-left">
+        <tr>
+            <th class="px-3 py-2 border-b">Category</th>
+            <th class="px-3 py-2 border-b">Title</th>
+            <th class="px-3 py-2 border-b">Contact Author</th>
+            <th class="px-3 py-2 border-b">Avg Score</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for article in articles %}
+        <tr class="border-b hover:bg-gray-50">
+            <td class="px-3 py-2">{{ article[0] }}</td>
+            <td class="px-3 py-2 font-medium">{{ article[1] }}</td>
+            <td class="px-3 py-2">
+                <div>{{ article[2] }}</div>
+                <div class="text-xs text-gray-400">{{ article[3] }}</div>
+            </td>
+            <td class="px-3 py-2 font-semibold">{{ "%.1f"|format(article[4]|float) }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="4" class="px-3 py-6 text-center text-gray-400">No accepted articles for this conference.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

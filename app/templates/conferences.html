@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block title %}Conferences | OpenReview{% endblock %}
+
+{% block content %}
+<h1 class="text-xl font-bold mb-4">Conferences</h1>
+
+<table class="w-full text-sm border">
+    <thead class="bg-gray-50 text-left">
+        <tr>
+            <th class="px-3 py-2 border-b">Acronym</th>
+            <th class="px-3 py-2 border-b">Name</th>
+            <th class="px-3 py-2 border-b">Location</th>
+            <th class="px-3 py-2 border-b">Website</th>
+            <th class="px-3 py-2 border-b"></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for conf in conferences %}
+        <tr class="border-b hover:bg-gray-50">
+            <td class="px-3 py-2 font-medium">{{ conf[0] }}</td>
+            <td class="px-3 py-2">{{ conf[1] }}</td>
+            <td class="px-3 py-2 text-gray-500">{{ conf[2] }}</td>
+            <td class="px-3 py-2">
+                {% if conf[3] %}
+                <a href="{{ conf[3] }}" class="text-blue-600 hover:underline" target="_blank">Link</a>
+                {% endif %}
+            </td>
+            <td class="px-3 py-2">
+                <a href="{{ url_for('accepted_articles', acronym=conf[0]) }}"
+                   class="text-blue-600 hover:underline">Accepted Articles &rarr;</a>
+            </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="5" class="px-3 py-6 text-center text-gray-400">No conferences found.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

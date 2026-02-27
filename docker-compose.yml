@@ -1,0 +1,44 @@
+# docker compose for the full stack (oracle + flask app)
+# run with: docker compose up --build
+# first time takes a while because oracle needs to init
+
+version: "3.8"
+
+services:
+
+  oracle-xe:
+    image: container-registry.oracle.com/database/express:21.3.0-xe
+    ports:
+      - "1521:1521"   # db connections
+      - "5500:5500"   # oracle EM web ui
+    environment:
+      - ORACLE_SID=XE
+      - ORACLE_PWD=password123
+    volumes:
+      - oracle-data:/opt/oracle/oradata
+    healthcheck:
+      test: ["CMD-SHELL", "echo 'SELECT 1 FROM DUAL;' | sqlplus -s system/password123@localhost:1521/XE || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 20
+      start_period: 120s   # oracle needs ~2 min first time
+
+  web:
+    # Use published image if available, otherwise build locally
+    image: ghcr.io/icekern/db:latest
+    build:
+      context: .
+      dockerfile: app/Dockerfile
+    ports:
+      - "5000:5000"
+    environment:
+      - DB_USER=system
+      - DB_PASS=password123
+      - DB_DSN=oracle-xe:1521/XE
+      - SECRET_KEY=conferencehub_docker_secret
+    depends_on:
+      oracle-xe:
+        condition: service_healthy
+
+volumes:
+  oracle-data:

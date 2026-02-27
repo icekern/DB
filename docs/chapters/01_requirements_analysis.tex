@@ -1,0 +1,379 @@
+\chapter{Requirements Analysis}
+\label{ch:requirements_analysis}
+
+In this chapter we analyze the original specification using the standard 8-phase method. Each step cleans up and organizes the text so we can use it in the next phase.
+
+The eight phases are:
+\begin{enumerate}[itemsep=4pt, topsep=6pt]
+    \item \textbf{Choose the right level of abstraction}
+    \item \textbf{Standardize sentence structure}
+    \item \textbf{Linearize and split articulated phrases}
+    \item \textbf{Identify homonyms and synonyms}
+    \item \textbf{Make explicit references between terms}
+    \item \textbf{Build a glossary}
+    \item \textbf{Reorganize phrases by keyword}
+    \item \textbf{Separate data specifications from functional requirements}
+\end{enumerate}
+
+\section{Requirements Gathering Output}
+\label{sec:requirements_gathering_output}
+
+Below is the original specification text:
+
+\begin{tracebox}
+Each conference organized by the company ``ConferenceHub Inc.'' is identified by an acronym and has an associated name, the
+venue where it will take place, the URL of the homepage, and an optional set of sponsors who finance the conference. For each
+sponsor, the following information is known: name, date the funding was provided, and amount. Each conference is assigned a
+set of organizers who form the program committee. For each organizer, the following is known: name, affiliation, address,
+phone number, and email. Each organizer may indicate, for each conference in which they participate as a program committee
+member, one or more research areas denoted by an acronym and a description. Articles submitted to a conference (an article
+cannot be submitted to more than one conference) are characterized by a sequential number within the conference, a title,
+and one or more authors for whom the following information must be maintained: name, affiliation, address, phone number,
+and email. Note that among the authors, one must be designated as the ``contact author'' who will receive all communications
+regarding the submitted article. Articles are also divided into different categories: tutorial, short papers, posters, industrial
+papers, and research papers. For industrial papers, information (name and address) about all partners who contributed to the
+research presented in the article must be stored. Based on the specified research area, articles are assigned to program
+committee members (the number of reviewers per article varies from a minimum of two to a maximum of four) who must
+prepare a review. The review prepared by a reviewer for a particular article includes a score on originality, significance, and
+quality of the proposed work, as well as a global score and comments that will be sent to the contact author. Based on the
+collected evaluations, the status of each article may be either ``accepted'' or ``rejected''.
+\end{tracebox}
+
+Figure~\ref{fig:highlighted_exam} shows the same text with colors to highlight the main concepts.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\textwidth]{images/highlighted_exam.png}
+\caption{Highlighted requirements gathering output.}
+\label{fig:highlighted_exam}
+\end{figure}
+
+\newpage
+
+\section{Phase 1: Choose the right level of abstraction}
+\label{sec:phase_1}
+
+We check if any term in the specification is too vague or too specific.
+
+\begin{tracebox}
+Each conference organized by the company ``ConferenceHub Inc.'' is identified by an acronym and has an associated name, the
+venue where it will take place, the URL of the homepage, and an optional set of sponsors who finance the conference.
+\end{tracebox}
+
+No additional work needed.
+
+\begin{tracebox}
+For each sponsor, the following information is known: name, date the funding was provided, and amount.
+\end{tracebox}
+
+No additional work needed.
+
+\begin{tracebox}
+Each conference is assigned a set of organizers who form the program committee.
+\end{tracebox}
+
+No additional work needed.
+
+\begin{tracebox}
+For each organizer, the following is known: name, affiliation, address, phone number, and email.
+\end{tracebox}
+
+No additional work needed.
+
+\begin{tracebox}
+Each organizer may indicate, for each conference in which they participate as a program committee member, one or more research areas denoted by an acronym and a description.
+\end{tracebox}
+
+No additional work needed.
+
+\begin{tracebox}
+Articles submitted to a conference (an article cannot be submitted to more than one conference) are characterized by a sequential number within the conference, a title, and one or more authors for whom the following information must be maintained: name, affiliation, address, phone number, and email.
+\end{tracebox}
+
+No additional work needed.
+
+\begin{tracebox}
+Note that among the authors, one must be designated as the ``contact author'' who will receive all communications regarding the submitted article.
+\end{tracebox}
+
+\begin{reasoningbox}
+The word ``communications'' is vague. In this context, the only communication that has real structured data is the review (scores, comments, link to the article). Things like acceptance emails are just notifications and do not need to be stored. So we interpret ``communications'' as \textbf{reviews}.
+\end{reasoningbox}
+
+\begin{tracebox}
+Articles are also divided into different categories: tutorial, short papers, posters, industrial papers, and research papers.
+\end{tracebox}
+
+No additional work needed.
+
+\begin{tracebox}
+For industrial papers, information (name and address) about all partners who contributed to the research presented in the article must be stored.
+\end{tracebox}
+
+No additional work needed.
+
+\begin{tracebox}
+Based on the specified research area, articles are assigned to program committee members (the number of reviewers per article varies from a minimum of two to a maximum of four) who must prepare a review.
+\end{tracebox}
+
+No additional work needed.
+
+\begin{tracebox}
+The review prepared by a reviewer for a particular article includes a score on originality, significance, and quality of the proposed work, as well as a global score and comments that will be sent to the contact author.
+\end{tracebox}
+
+\begin{assumptionbox}
+The specification does not say what range the scores have. We assume all scores are \textbf{integers from 0 to 10}.
+\end{assumptionbox}
+
+\begin{tracebox}
+Based on the collected evaluations, the status of each article may be either ``accepted'' or ``rejected''.
+\end{tracebox}
+
+\begin{assumptionbox}
+The specification only mentions \texttt{accepted} and \texttt{rejected}. But before the reviews are done, the article needs a temporary state. So we add \texttt{pending} as a third status. The full set is: \{\texttt{pending}, \texttt{accepted}, \texttt{rejected}\}.
+\end{assumptionbox}
+
+\section{Phase 2 -- 3: Standardize sentence structure \& Linearize phrases}
+
+We rewrite all sentences using this standard structure:
+
+\begin{infobox}
+For each \textless subject\textgreater, we are interested in \textless properties\textgreater.
+\end{infobox}
+
+Each complex sentence is split into simple, atomic statements.
+
+\begin{infobox}
+The following sentences follow the order of appearance in the original specification.
+\end{infobox}
+
+\begin{enumerate}[itemsep=6pt, topsep=6pt, leftmargin=1.5em]
+
+  \item For each \textbf{conference}, we are interested in its \texttt{acronym}, \texttt{name}, \texttt{venue}, and \texttt{homepage URL}.
+
+  \item For each \textbf{conference}, we are interested in the set of \textbf{sponsors} that finance it. The set of sponsors may be empty.
+
+  \item For each \textbf{sponsor} of a conference, we are interested in its \texttt{name}, the \texttt{funding date}, and the \texttt{funded amount}.
+
+  \item For each \textbf{conference}, we are interested in the set of \textbf{organizers} that form its program committee.
+
+  \item For each \textbf{organizer}, we are interested in its \texttt{code}, \texttt{name}, \texttt{affiliation}, \texttt{address}, \texttt{phone number}, and \texttt{email}.
+
+  \item For each \textbf{organizer}, for each \textbf{conference} in which they participate as a program committee member, we are interested in the \textbf{research areas} they declare. \textbf{An organizer may declare one or more research areas per conference.}
+
+  \item For each \textbf{research area}, we are interested in its \texttt{acronym} and \texttt{description}.
+
+  \item For each \textbf{article}, we are interested in its \texttt{sequential number} (unique within the conference), its \texttt{title}, and its \texttt{category}.
+
+  \item For each \textbf{article}, we are interested in the single \textbf{conference} to which it is submitted. An article cannot be submitted to more than one conference.
+
+  \item For each \textbf{article}, we are interested in the set of \textbf{authors} who wrote it. Each article has one or more authors.
+
+  \item For each \textbf{author}, we are interested in its \texttt{code}, \texttt{name}, \texttt{affiliation}, \texttt{address}, \texttt{phone number}, and \texttt{email}.
+
+  \item For each \textbf{article}, we are interested in which of its authors is designated as the \textbf{contact author}. Exactly one author per article must hold this role.
+
+  \item For each \textbf{article}, we are interested in its \texttt{category}, which is one of: \texttt{tutorial}, \texttt{short paper}, \texttt{poster}, \texttt{industrial paper}, \texttt{research paper}.
+
+  \item For each \textbf{industrial paper}, we are interested in the set of \textbf{partners} who contributed to the research. Each partner has a \texttt{code}, \texttt{name} and an \texttt{address}.
+
+  \item For each \textbf{article}, we are interested in the set of \textbf{reviewers} (program committee members) assigned to evaluate it, based on research area compatibility. Each article receives between 2 and 4 reviewers.
+
+  \item For each \textbf{review}, we are interested in its \texttt{code}, \texttt{date}, \texttt{content}, the \texttt{originality score}, the \texttt{significance score}, the \texttt{quality score}, the \texttt{global score}, and the \texttt{comments}. Scores are integer numbers between 0 and 10. Each review is prepared by exactly one reviewer for exactly one article.
+
+  \item For each \textbf{article}, we are interested in its \texttt{status}: \texttt{pending}, \texttt{accepted}, or \texttt{rejected}.
+
+\end{enumerate}
+
+\newpage
+
+\section{Phase 4: Identify homonyms and synonyms}
+
+We look for synonyms (different words for the same thing) and homonyms (same word for different things), and we pick one standard name for each concept.
+
+\begin{infobox}
+Fixing synonyms now avoids confusion in the next phases and keeps naming consistent.
+\end{infobox}
+
+\begin{table}[!ht]
+\centering
+\caption{Synonyms table.}
+\label{tab:synonyms}
+\small
+\begin{tabularx}{\textwidth}{@{} l X l @{}}
+  \toprule
+  Terms found in the specification & Explanation & Canonical term \\
+  \midrule
+  Organizer, Program committee member & Both refer to a person participating in a conference committee. & \textsc{Organizer} \\[4pt]
+  Article, Paper & Both refer to a manuscript submitted to a conference. & \textsc{Article} \\[4pt]
+  Score, Evaluation & Both refer to the numerical ratings assigned during the review process. & \textsc{Score} \\[4pt]
+  Communication, Review & In this context, the only communication worth persisting is the structured review. & \textsc{Review} \\[4pt]
+  \bottomrule
+\end{tabularx}
+\end{table}
+
+No homonyms have been found.
+
+\section{Phase 5: Making explicit references between terms}
+
+Nothing to do here --- the sentences from Phase 2--3 are already clear.
+
+\newpage
+
+\section{Phase 6: Building a glossary}
+
+Table~\ref{tab:glossary} lists all the terms we found, with descriptions, synonyms, and connections.
+
+\begin{table}[!ht]
+\centering
+\caption{Glossary of terms.}
+\label{tab:glossary}
+\footnotesize
+\begin{tabularx}{\textwidth}{@{} l X p{2.8cm} p{3.5cm} @{}}
+  \toprule
+  Term & Description & Synonyms & Connections \\
+  \midrule
+  Conference      & Academic event organized by ConferenceHub Inc., identified by an acronym.                   & ---                & Sponsor, Organizer, Article, Research Area \\[2pt]
+  Sponsor         & Company or individual financing a conference.                                               & ---                & Conference \\[2pt]
+  Organizer       & Member of the program committee. May also act as a reviewer.                                & Program committee member & Conference, Research Area, Reviewer \\[2pt]
+  Reviewer        & An organizer assigned to evaluate articles.                                                  & ---                & Review, Organizer \\[2pt]
+  Research Area   & A domain of study used to match articles with suitable reviewers.                             & ---                & Research Area Indication, Article, Conference \\[2pt]
+  Article         & Manuscript submitted to exactly one conference, classified by category and evaluated for acceptance. & Paper          & Conference, Author, Review, Partner \\[2pt]
+  Author          & Person who co-wrote a submitted article. One per article is designated as \emph{contact author}. & --- & Article \\[2pt]
+  Review          & Evaluation prepared by a reviewer for an article, including scores and comments.              & Communication      & Article, Reviewer \\[2pt]
+  Partner         & Organization contributing to the research of an industrial paper.                             & ---                & Article \\[2pt]
+  Research Area Indication & Bridge entity recording the research areas declared by an organizer for a specific conference. & --- & Organizer, Conference, Research Area \\
+  \bottomrule
+\end{tabularx}
+\end{table}
+
+\newpage
+
+\section{Phase 7: Reorganizing phrases by keyword}
+
+Now we group the sentences by the main entity they describe.
+
+\begin{table}[!ht]
+\centering
+\begin{tabularx}{\textwidth}{|X|}
+  \hline
+  \multicolumn{1}{|c|}{\textbf{Conference}} \\
+  \hline
+  For each conference we are interested in an acronym, a name, a location, and a homepage URL. A conference may have zero or more sponsors. Each conference has a program committee composed of at least two organizers. \\
+  \hline
+\end{tabularx}
+\end{table}
+
+\begin{table}[!ht]
+\centering
+\begin{tabularx}{\textwidth}{|X|}
+  \hline
+  \multicolumn{1}{|c|}{\textbf{Sponsor}} \\
+  \hline
+  For each sponsor we are interested in a name. For each sponsorship of a conference, a funding date and a funded amount are recorded. A sponsor may finance one or more conferences. \\
+  \hline
+\end{tabularx}
+\end{table}
+
+\begin{table}[!ht]
+\centering
+\begin{tabularx}{\textwidth}{|X|}
+  \hline
+  \multicolumn{1}{|c|}{\textbf{Organizer}} \\
+  \hline
+  For each organizer we are interested in a code, name, affiliation, address, phone, and email. An organizer may serve on the program committee of multiple conferences. For each organizer--conference membership, the organizer may declare one or more research areas. \\
+  \hline
+\end{tabularx}
+\end{table}
+
+\begin{table}[!ht]
+\centering
+\begin{tabularx}{\textwidth}{|X|}
+  \hline
+  \multicolumn{1}{|c|}{\textbf{Research Area}} \\
+  \hline
+  For each research area we are interested in an acronym and a textual description. Research areas are declared by organizers within a specific conference and are used to match articles with suitable reviewers based on topic compatibility. \\
+  \hline
+\end{tabularx}
+\end{table}
+
+\begin{table}[!ht]
+\centering
+\begin{tabularx}{\textwidth}{|X|}
+  \hline
+  \multicolumn{1}{|c|}{\textbf{Article}} \\
+  \hline
+  For each article we are interested in a sequential number (within its conference) and a title. An article is submitted to exactly one conference, written by one or more authors (exactly one of whom is the contact author), and belongs to exactly one of the five categories. It is assigned to between 2 and 4 reviewers based on research area compatibility and eventually receives a status of \texttt{accepted}, \texttt{rejected}, or \texttt{pending}. \\
+  \hline
+\end{tabularx}
+\end{table}
+
+\begin{table}[!ht]
+\centering
+\begin{tabularx}{\textwidth}{|X|}
+  \hline
+  \multicolumn{1}{|c|}{\textbf{Author}} \\
+  \hline
+  For each author we are interested in a code, name, affiliation, address, phone, and email. An author may write multiple articles. \\
+  \hline
+\end{tabularx}
+\end{table}
+
+\begin{table}[!ht]
+\centering
+\begin{tabularx}{\textwidth}{|X|}
+  \hline
+  \multicolumn{1}{|c|}{\textbf{Review}} \\
+  \hline
+  For each review we are interested in a code, a date, content, scores for originality, significance, quality, global score, and comments (scores are integers between 0 and 10). Each review is prepared by exactly one reviewer for exactly one article. The review and comments are sent to the contact author of that article. \\
+  \hline
+\end{tabularx}
+\end{table}
+
+\begin{table}[!ht]
+\centering
+\begin{tabularx}{\textwidth}{|X|}
+  \hline
+  \multicolumn{1}{|c|}{\textbf{Partner}} \\
+  \hline
+  For each partner we are interested in a code, a name, and an address. Partners are associated only with industrial papers. \\
+  \hline
+\end{tabularx}
+\end{table}
+
+\begin{table}[!ht]
+\centering
+\begin{tabularx}{\textwidth}{|X|}
+  \hline
+  \multicolumn{1}{|c|}{\textbf{Reviewer}} \\
+  \hline
+  A reviewer is an organizer who has been assigned to evaluate articles. Reviewers inherit all attributes of Organizer (code, name, affiliation, address, phone, email). Each reviewer may be assigned to evaluate multiple articles via the Review Assignment relationship. \\
+  \hline
+\end{tabularx}
+\end{table}
+
+\section{Phase 8: Separate data specifications from functional requirements}
+
+Now we separate the data requirements (already documented above) from the operations the system must support.
+
+\begin{infobox}
+These operations (OP1--OP4) are used in Chapter~3 for the workload analysis and in Chapter~4 as stored procedures.
+\end{infobox}
+
+\begin{table}[!ht]
+\centering
+\caption{Functional requirements: operations and estimated frequencies.}
+\label{tab:functional_requirements}
+\small
+\begin{tabularx}{\textwidth}{@{} c X c r @{}}
+  \toprule
+  ID & Operation & Type & Frequency \\
+  \midrule
+  OP1 & Insert a new article submission to a conference, including title, category, and the list of authors with their contact information. & I & 50/day \\[4pt]
+  OP2 & For each program committee member, print the list of articles assigned for review, including article title, category, and the names of all authors. & I & 40/day \\[4pt]
+  OP3 & Insert a new review for an article, including scores for originality, significance, quality, global score, and comments. & I & 80/day \\[4pt]
+  OP4 & For each conference, print the list of all accepted articles grouped by category, including title, contact author name and email, and average global score. & I & 10/day \\
+  \bottomrule
+\end{tabularx}
+\end{table}

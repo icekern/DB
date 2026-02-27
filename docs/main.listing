@@ -1,0 +1,11 @@
+-- most used FK, fires in 4 triggers
+CREATE INDEX idx_review_article_id
+    ON Review(article_id);
+
+-- for the assignments page (OP2)
+CREATE INDEX idx_review_reviewer_code
+    ON Review(reviewer_code);
+
+-- conference_acronym is 2nd in PK, need separate index (BR9)
+CREATE INDEX idx_membership_conf
+    ON Membership(conference_acronym);

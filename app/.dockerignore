@@ -1,0 +1,5 @@
+venv/
+__pycache__/
+*.pyc
+setup.bat
+start_server.bat

@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% block title %}Submit Review{% endblock %}
+
+{% block content %}
+<h1 class="text-xl font-bold mb-4">Submit Review</h1>
+
+{# Step 1: enter reviewer code #}
+<form action="{{ url_for('submit_review') }}" method="GET" class="max-w-lg flex gap-2 mb-6">
+    <input type="text" name="reviewer" value="{{ reviewer_code or '' }}" required placeholder="Reviewer code (e.g. ORG_1_1)"
+           class="flex-1 border rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500">
+    <button type="submit" class="bg-gray-700 text-white px-4 py-2 rounded text-sm hover:bg-gray-800">Load Reviews</button>
+</form>
+
+{% if reviewer_code %}
+    {% if reviews|length == 0 %}
+        <p class="text-gray-400 text-sm">No reviews found for <strong>{{ reviewer_code }}</strong>.</p>
+    {% else %}
+    {# Step 2: pick a review and fill scores #}
+    <form action="{{ url_for('submit_review') }}" method="POST" class="max-w-lg space-y-4">
+
+        <div>
+            <label for="review_code" class="block text-sm font-medium mb-1">Select Review</label>
+            <select name="review_code" id="review_code" required
+                    class="w-full border rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500">
+                {% for rev in reviews %}
+                <option value="{{ rev[0] }}">{{ rev[0] }} — {{ rev[1] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="grid grid-cols-3 gap-3">
+            <div>
+                <label for="originality" class="block text-sm font-medium mb-1">Originality (0-10)</label>
+                <input type="number" name="originality" id="originality" min="0" max="10" required
+                       class="w-full border rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500">
+            </div>
+            <div>
+                <label for="significance" class="block text-sm font-medium mb-1">Significance (0-10)</label>
+                <input type="number" name="significance" id="significance" min="0" max="10" required
+                       class="w-full border rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500">
+            </div>
+            <div>
+                <label for="quality" class="block text-sm font-medium mb-1">Quality (0-10)</label>
+                <input type="number" name="quality" id="quality" min="0" max="10" required
+                       class="w-full border rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500">
+            </div>
+        </div>
+
+        <div>
+            <label for="content" class="block text-sm font-medium mb-1">Review Content</label>
+            <textarea id="content" name="content" rows="4" required
+                      class="w-full border rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"></textarea>
+        </div>
+
+        <div>
+            <label for="comments" class="block text-sm font-medium mb-1">Private Comments (optional)</label>
+            <textarea id="comments" name="comments" rows="2"
+                      class="w-full border rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"></textarea>
+        </div>
+
+        <button type="submit"
+                class="bg-blue-600 text-white px-4 py-2 rounded text-sm hover:bg-blue-700">
+            Submit
+        </button>
+    </form>
+    {% endif %}
+{% endif %}
+{% endblock %}

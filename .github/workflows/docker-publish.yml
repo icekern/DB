@@ -1,0 +1,164 @@
+name: Build and Release
+
+on:
+  push:
+    branches: [master]
+    tags: ['v*']
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: icekern/db
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Log in to GitHub Container Registry
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        if: startsWith(github.ref, 'refs/tags/v')
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=raw,value=latest
+            type=semver,pattern={{version}}
+
+      - name: Build and push to GitHub Packages
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Build Docker image (master branch)
+        if: github.ref == 'refs/heads/master'
+        run: |
+          docker build -f Dockerfile -t icekern/db:latest .
+          echo "✅ Docker build successful"
+
+      - name: Save Docker image as asset (on version tags)
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          docker save ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest | gzip > db-docker-image.tar.gz
+          echo "✅ Docker image saved as asset"
+
+      - name: Create deployment package (on version tags)
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          # Create a complete deployment package
+          mkdir -p deployment-package
+          cp docker-compose.yml deployment-package/
+          cp README.md deployment-package/
+          
+          # Create a startup script
+          cat > deployment-package/start.bat << 'EOF'
+          @echo off
+          echo Starting ConferenceHub deployment...
+          echo.
+          echo This will start:
+          echo - Oracle 21c XE database (port 1521, 5500)  
+          echo - ConferenceHub web app (port 5000)
+          echo.
+          echo Web app will be available at: http://localhost:5000
+          echo Oracle EM will be available at: http://localhost:5500/em
+          echo.
+          pause
+          docker compose up --pull always
+          EOF
+          
+          cat > deployment-package/start.sh << 'EOF'
+          #!/bin/bash
+          echo "Starting ConferenceHub deployment..."
+          echo ""
+          echo "This will start:"
+          echo "- Oracle 21c XE database (port 1521, 5500)"  
+          echo "- ConferenceHub web app (port 5000)"
+          echo ""
+          echo "Web app will be available at: http://localhost:5000"
+          echo "Oracle EM will be available at: http://localhost:5500/em"
+          echo ""
+          read -p "Press Enter to continue..."
+          docker compose up --pull always
+          EOF
+          chmod +x deployment-package/start.sh
+          
+          # Package everything
+          cd deployment-package
+          zip -r ../db-complete-deployment.zip .
+          cd ..
+          echo "✅ Complete deployment package created"
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            db-docker-image.tar.gz
+            db-complete-deployment.zip
+          generate_release_notes: true
+          body: |
+            ## 🚀 Quick Start (Recommended)
+
+            **Complete deployment package:**
+            1. Download `db-complete-deployment.zip` from Assets below
+            2. Extract and run `start.bat` (Windows) or `start.sh` (Linux/Mac)
+
+            Access:
+            - 🌐 **Web App**: http://localhost:5000
+            - 🗄️ **Oracle Enterprise Manager**: http://localhost:5500/em
+
+            ## 🐳 Docker (all-in-one image, no external DB needed)
+
+            **From GitHub Packages:**
+            ```bash
+            docker pull ghcr.io/icekern/db:latest
+            docker run -p 5000:5000 ghcr.io/icekern/db:latest
+            ```
+
+            **Load from asset:**
+            ```bash
+            docker load < db-docker-image.tar.gz
+            docker run -p 5000:5000 ghcr.io/icekern/db:latest
+            ```
+
+            **From source (docker-compose, separate Oracle container):**
+            ```bash
+            git clone https://github.com/${{ github.repository }}.git
+            cd DB
+            docker compose up --build
+            ```
+
+            ## 📋 Features
+
+            - **Oracle 21c XE** database with ConferenceHub schema
+            - **9 business rule triggers** (BR1-BR13) for data integrity  
+            - **4 stored procedures** for conference and review management
+            - **Sample data**: 100 conferences, 1200 articles, 3600 reviews
+            - **Web interface**: article submission, reviewer assignment, review management
+
+            ## 🏗️ Architecture
+
+            - **Backend**: Python Flask + Gunicorn + python-oracledb
+            - **Frontend**: Jinja2 templates + Tailwind CSS
+            - **Database**: Oracle 21c XE with complete triggers and procedures
+            - **Deployment**: Docker Compose (app + db containers)

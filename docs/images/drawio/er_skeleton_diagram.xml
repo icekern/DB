@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36" version="29.5.2">
+  <diagram name="ER Skeleton Diagram" id="skeleton">
+    <mxGraphModel dx="1708" dy="884" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- ===== ENTITIES ===== -->
+
+        <!-- sponsor -->
+        <mxCell id="fsCrZS-kw_3UYgfHhvLF-1260" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000;fontSize=13;fontStyle=0;" value="sponsor" vertex="1">
+          <mxGeometry height="50" width="130" x="80" y="85" as="geometry" />
+        </mxCell>
+
+        <!-- conference -->
+        <mxCell id="fsCrZS-kw_3UYgfHhvLF-1261" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000;fontSize=13;fontStyle=0;" value="conference" vertex="1">
+          <mxGeometry height="50" width="140" x="500" y="85" as="geometry" />
+        </mxCell>
+
+        <!-- organizer -->
+        <mxCell id="fsCrZS-kw_3UYgfHhvLF-1262" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000;fontSize=13;fontStyle=0;" value="organizer" vertex="1">
+          <mxGeometry height="50" width="140" x="1145" y="85" as="geometry" />
+        </mxCell>
+
+        <!-- research area indication -->
+        <mxCell id="fsCrZS-kw_3UYgfHhvLF-1263" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000;fontSize=13;fontStyle=0;" value="research area&lt;br&gt;indication" vertex="1">
+          <mxGeometry height="50" width="110" x="800" y="244" as="geometry" />
+        </mxCell>
+
+        <!-- author -->
+        <mxCell id="fsCrZS-kw_3UYgfHhvLF-1267" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000;fontSize=13;fontStyle=0;" value="author" vertex="1">
+          <mxGeometry height="50" width="130" x="80" y="405" as="geometry" />
+        </mxCell>
+
+        <!-- article -->
+        <mxCell id="fsCrZS-kw_3UYgfHhvLF-1268" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000;fontSize=13;fontStyle=0;" value="article" vertex="1">
+          <mxGeometry height="50" width="140" x="500" y="405" as="geometry" />
+        </mxCell>
+
+        <!-- partner -->
+        <mxCell id="fsCrZS-kw_3UYgfHhvLF-1274" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000;fontSize=13;fontStyle=0;" value="partner" vertex="1">
+          <mxGeometry height="50" width="130" x="68" y="610" as="geometry" />
+        </mxCell>
+
+        <!-- review -->
+        <mxCell id="fsCrZS-kw_3UYgfHhvLF-1276" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000;fontSize=13;fontStyle=0;" value="review" vertex="1">
+          <mxGeometry height="50" width="140" x="810" y="588" as="geometry" />
+        </mxCell>
+
+        <!-- reviewer -->
+        <mxCell id="fsCrZS-kw_3UYgfHhvLF-1405" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000;fontSize=12;fontStyle=0;" value="reviewer" vertex="1">
+          <mxGeometry height="50" width="100" x="1165" y="218" as="geometry" />
+        </mxCell>
+
+        <!-- research area -->
+        <mxCell id="fsCrZS-kw_3UYgfHhvLF-1428" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000;fontSize=13;fontStyle=0;" value="research area" vertex="1">
+          <mxGeometry height="50" width="110" x="990" y="405" as="geometry" />
+        </mxCell>
+
+        <!-- ===== GENERALIZATION SUBTYPES (article) ===== -->
+
+        <!-- industrial paper -->
+        <mxCell id="fsCrZS-kw_3UYgfHhvLF-1416" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000;fontSize=10;fontStyle=0;" value="industrial paper" vertex="1">
+          <mxGeometry height="30" width="64.31" x="373" y="620" as="geometry" />
+        </mxCell>
+
+        <!-- tutorial -->
+        <mxCell id="fsCrZS-kw_3UYgfHhvLF-1411" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000;fontSize=10;fontStyle=0;" value="tutorial" vertex="1">
+          <mxGeometry height="30" width="64.31" x="451" y="620" as="geometry" />
+        </mxCell>
+
+        <!-- short paper -->
+        <mxCell id="fsCrZS-kw_3UYgfHhvLF-1417" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000;fontSize=10;fontStyle=0;" value="short paper" vertex="1">
+          <mxGeometry height="30" width="64.31" x="528" y="620" as="geometry" />
+        </mxCell>
+
+        <!-- posters -->
+        <mxCell id="fsCrZS-kw_3UYgfHhvLF-1418" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000;fontSize=10;fontStyle=0;" value="posters" vertex="1">
+          <mxGeometry height="30" width="64.31" x="604" y="620" as="geometry" />
+        </mxCell>
+
+        <!-- research papers -->
+        <mxCell id="fsCrZS-kw_3UYgfHhvLF-1419" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000;fontSize=10;fontStyle=0;" value="research papers" vertex="1">
+          <mxGeometry height="30" width="64.31" x="676" y="620" as="geometry" />
+        </mxCell>
+
+        <!-- ===== RELATIONSHIPS ===== -->
+
+        <!-- sponsorship -->
+        <mxCell id="fsCrZS-kw_3UYgfHhvLF-1264" parent="1" style="shape=rhombus;perimeter=rhombusPerimeter;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000;fontSize=11;" value="sponsorship" vertex="1">
+          <mxGeometry height="65" width="150" x="280" y="78" as="geometry" />
+        </mxCell>
+
+        <!-- membership -->
+        <mxCell id="fsCrZS-kw_3UYgfHhvLF-1265" parent="1" style="shape=rhombus;perimeter=rhombusPerimeter;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000;fontSize=11;" value="membership" vertex="1">
+          <mxGeometry height="65" width="140" x="750" y="78" as="geometry" />
+        </mxCell>
+
+        <!-- organizer area indication -->
+        <mxCell id="fsCrZS-kw_3UYgfHhvLF-1266" parent="1" style="shape=rhombus;perimeter=rhombusPerimeter;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000;fontSize=10;" value="organizer area&lt;br&gt;indication" vertex="1">
+          <mxGeometry height="65" width="140" x="987" y="153" as="geometry" />
+        </mxCell>
+
+        <!-- submission -->
+        <mxCell id="fsCrZS-kw_3UYgfHhvLF-1269" parent="1" style="shape=rhombus;perimeter=rhombusPerimeter;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000;fontSize=11;" value="submission" vertex="1">
+          <mxGeometry height="65" width="130" x="505" y="245" as="geometry" />
+        </mxCell>
+
+        <!-- authorship -->
+        <mxCell id="fsCrZS-kw_3UYgfHhvLF-1270" parent="1" style="shape=rhombus;perimeter=rhombusPerimeter;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000;fontSize=11;" value="authorship" vertex="1">
+          <mxGeometry height="65" width="140" x="285" y="398" as="geometry" />
+        </mxCell>
+
+        <!-- contact designation -->
+        <mxCell id="fsCrZS-kw_3UYgfHhvLF-1272" parent="1" style="shape=rhombus;perimeter=rhombusPerimeter;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000;fontSize=10;" value="contact&#xa;designation" vertex="1">
+          <mxGeometry height="65" width="130" x="290" y="485" as="geometry" />
+        </mxCell>
+
+        <!-- about -->
+        <mxCell id="fsCrZS-kw_3UYgfHhvLF-1273" parent="1" style="shape=rhombus;perimeter=rhombusPerimeter;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000;fontSize=11;" value="about" vertex="1">
+          <mxGeometry height="60" width="120" x="665" y="498" as="geometry" />
+        </mxCell>
+
+        <!-- contribution -->
+        <mxCell id="fsCrZS-kw_3UYgfHhvLF-1275" parent="1" style="shape=rhombus;perimeter=rhombusPerimeter;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000;fontSize=11;" value="contribution" vertex="1">
+          <mxGeometry height="57.78" width="76" x="245" y="606" as="geometry" />
+        </mxCell>
+
+        <!-- review assignment -->
+        <mxCell id="fsCrZS-kw_3UYgfHhvLF-1277" parent="1" style="shape=rhombus;perimeter=rhombusPerimeter;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000;fontSize=10;" value="review&lt;br&gt;assignment" vertex="1">
+          <mxGeometry height="65" width="130" x="1150" y="580" as="geometry" />
+        </mxCell>
+
+        <!-- article area indication -->
+        <mxCell id="fsCrZS-kw_3UYgfHhvLF-1413" parent="1" style="shape=rhombus;perimeter=rhombusPerimeter;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000;fontSize=10;" value="article area&lt;br&gt;indication" vertex="1">
+          <mxGeometry height="65" width="140" x="755" y="398" as="geometry" />
+        </mxCell>
+
+        <!-- conference research area -->
+        <mxCell id="fsCrZS-kw_3UYgfHhvLF-1424" parent="1" style="shape=rhombus;perimeter=rhombusPerimeter;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000;fontSize=10;" value="conference research&amp;nbsp;&lt;div&gt;area&lt;/div&gt;" vertex="1">
+          <mxGeometry height="65" width="140" x="643" y="168" as="geometry" />
+        </mxCell>
+
+        <!-- research area instance of -->
+        <mxCell id="fsCrZS-kw_3UYgfHhvLF-1434" parent="1" style="shape=rhombus;perimeter=rhombusPerimeter;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000;fontSize=10;" value="research area&lt;br&gt;instance of" vertex="1">
+          <mxGeometry height="65" width="140" x="975" y="237" as="geometry" />
+        </mxCell>
+
+        <!-- ===== ENTITY-RELATIONSHIP EDGES ===== -->
+
+        <!-- sponsor → sponsorship (1,N) -->
+        <mxCell id="fsCrZS-kw_3UYgfHhvLF-1339" edge="1" parent="1" source="fsCrZS-kw_3UYgfHhvLF-1260" style="endArrow=none;html=1;fontSize=9;strokeColor=#000;" target="fsCrZS-kw_3UYgfHhvLF-1264" value="(1,N)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- conference → sponsorship (0,N) -->
+        <mxCell id="fsCrZS-kw_3UYgfHhvLF-1340" edge="1" parent="1" source="fsCrZS-kw_3UYgfHhvLF-1261" style="endArrow=none;html=1;fontSize=9;strokeColor=#000;" target="fsCrZS-kw_3UYgfHhvLF-1264" value="(0,N)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- conference → membership (2,N) -->
+        <mxCell id="fsCrZS-kw_3UYgfHhvLF-1341" edge="1" parent="1" source="fsCrZS-kw_3UYgfHhvLF-1261" style="endArrow=none;html=1;fontSize=9;strokeColor=#000;" target="fsCrZS-kw_3UYgfHhvLF-1265" value="(2,N)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- organizer → membership (1,N) -->
+        <mxCell id="fsCrZS-kw_3UYgfHhvLF-1342" edge="1" parent="1" source="fsCrZS-kw_3UYgfHhvLF-1262" style="endArrow=none;html=1;fontSize=9;strokeColor=#000;" target="fsCrZS-kw_3UYgfHhvLF-1265" value="(1,N)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- organizer → organizer area indication (1,N) -->
+        <mxCell id="fsCrZS-kw_3UYgfHhvLF-1343" edge="1" parent="1" source="fsCrZS-kw_3UYgfHhvLF-1262" style="endArrow=none;html=1;fontSize=9;strokeColor=#000;entryX=1;entryY=0;entryDx=0;entryDy=0;" target="fsCrZS-kw_3UYgfHhvLF-1266" value="(1,N)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- research area indication → organizer area indication (1,1) -->
+        <mxCell id="fsCrZS-kw_3UYgfHhvLF-1344" edge="1" parent="1" source="fsCrZS-kw_3UYgfHhvLF-1263" style="endArrow=none;html=1;fontSize=9;strokeColor=#000;entryX=0;entryY=1;entryDx=0;entryDy=0;" target="fsCrZS-kw_3UYgfHhvLF-1266" value="(1,1)">
+          <mxGeometry relative="1" x="0.0062" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- article → submission (1,1) -->
+        <mxCell id="fsCrZS-kw_3UYgfHhvLF-1345" edge="1" parent="1" source="fsCrZS-kw_3UYgfHhvLF-1268" style="endArrow=none;html=1;fontSize=9;strokeColor=#000;" target="fsCrZS-kw_3UYgfHhvLF-1269" value="(1,1)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- conference → submission (0,N) -->
+        <mxCell id="fsCrZS-kw_3UYgfHhvLF-1346" edge="1" parent="1" source="fsCrZS-kw_3UYgfHhvLF-1261" style="endArrow=none;html=1;fontSize=9;strokeColor=#000;" target="fsCrZS-kw_3UYgfHhvLF-1269" value="(0,N)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- author → authorship (1,N) -->
+        <mxCell id="fsCrZS-kw_3UYgfHhvLF-1347" edge="1" parent="1" source="fsCrZS-kw_3UYgfHhvLF-1267" style="endArrow=none;html=1;fontSize=9;strokeColor=#000;" target="fsCrZS-kw_3UYgfHhvLF-1270" value="(1,N)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- article → authorship (1,N) -->
+        <mxCell id="fsCrZS-kw_3UYgfHhvLF-1348" edge="1" parent="1" source="fsCrZS-kw_3UYgfHhvLF-1268" style="endArrow=none;html=1;fontSize=9;strokeColor=#000;" target="fsCrZS-kw_3UYgfHhvLF-1270" value="(1,N)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- author → contact designation (0,N) -->
+        <mxCell id="fsCrZS-kw_3UYgfHhvLF-1349" edge="1" parent="1" source="fsCrZS-kw_3UYgfHhvLF-1267" style="endArrow=none;html=1;fontSize=9;strokeColor=#000;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=1;exitY=1;exitDx=0;exitDy=0;" target="fsCrZS-kw_3UYgfHhvLF-1272" value="(0,N)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- article → contact designation (1,1) -->
+        <mxCell id="fsCrZS-kw_3UYgfHhvLF-1350" edge="1" parent="1" source="fsCrZS-kw_3UYgfHhvLF-1268" style="endArrow=none;html=1;fontSize=9;strokeColor=#000;entryX=1;entryY=0.5;entryDx=0;entryDy=0;exitX=0;exitY=1;exitDx=0;exitDy=0;" target="fsCrZS-kw_3UYgfHhvLF-1272" value="(1,1)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- review → about (1,1) -->
+        <mxCell id="fsCrZS-kw_3UYgfHhvLF-1353" edge="1" parent="1" source="fsCrZS-kw_3UYgfHhvLF-1276" style="endArrow=none;html=1;fontSize=9;strokeColor=#000;" target="fsCrZS-kw_3UYgfHhvLF-1273" value="(1,1)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- article → about (2,4) -->
+        <mxCell id="fsCrZS-kw_3UYgfHhvLF-1354" edge="1" parent="1" source="fsCrZS-kw_3UYgfHhvLF-1268" style="endArrow=none;html=1;fontSize=9;strokeColor=#000;" target="fsCrZS-kw_3UYgfHhvLF-1273" value="(2,4)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- conference → contribution (0,N) via sourcePoint -->
+        <mxCell id="fsCrZS-kw_3UYgfHhvLF-1355" edge="1" parent="1" style="endArrow=none;html=1;fontSize=9;strokeColor=#000;entryX=1;entryY=0.5;entryDx=0;entryDy=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" target="fsCrZS-kw_3UYgfHhvLF-1275" value="(0,N)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="373" y="635" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- partner → contribution (1,N) -->
+        <mxCell id="fsCrZS-kw_3UYgfHhvLF-1356" edge="1" parent="1" source="fsCrZS-kw_3UYgfHhvLF-1274" style="endArrow=none;html=1;fontSize=9;strokeColor=#000;" target="fsCrZS-kw_3UYgfHhvLF-1275" value="(1,N)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- review → review assignment (1,1) -->
+        <mxCell id="fsCrZS-kw_3UYgfHhvLF-1357" edge="1" parent="1" source="fsCrZS-kw_3UYgfHhvLF-1276" style="endArrow=none;html=1;fontSize=9;strokeColor=#000;" target="fsCrZS-kw_3UYgfHhvLF-1277" value="(1,1)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- reviewer → review assignment (1,N) -->
+        <mxCell id="fsCrZS-kw_3UYgfHhvLF-1358" edge="1" parent="1" source="fsCrZS-kw_3UYgfHhvLF-1405" style="endArrow=none;html=1;fontSize=9;strokeColor=#000;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" target="fsCrZS-kw_3UYgfHhvLF-1277" value="(1,N)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- research area → article area indication (0,N) -->
+        <mxCell id="fsCrZS-kw_3UYgfHhvLF-1414" edge="1" parent="1" source="fsCrZS-kw_3UYgfHhvLF-1428" style="endArrow=none;html=1;fontSize=9;strokeColor=#000;entryX=1;entryY=0.5;entryDx=0;entryDy=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" target="fsCrZS-kw_3UYgfHhvLF-1413" value="(0,N)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- article area indication → article (1,N) -->
+        <mxCell id="fsCrZS-kw_3UYgfHhvLF-1415" edge="1" parent="1" source="fsCrZS-kw_3UYgfHhvLF-1413" style="endArrow=none;html=1;fontSize=9;strokeColor=#000;entryX=1;entryY=0.5;entryDx=0;entryDy=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" target="fsCrZS-kw_3UYgfHhvLF-1268" value="(1,N)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- research area indication → conference research area (1,1) -->
+        <mxCell id="fsCrZS-kw_3UYgfHhvLF-1425" edge="1" parent="1" source="fsCrZS-kw_3UYgfHhvLF-1263" style="endArrow=none;html=1;fontSize=9;strokeColor=#000;entryX=1;entryY=1;entryDx=0;entryDy=0;exitX=0;exitY=0;exitDx=0;exitDy=0;" target="fsCrZS-kw_3UYgfHhvLF-1424" value="(1,1)">
+          <mxGeometry relative="1" x="0.6345" y="4" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- conference research area → conference (1,N) -->
+        <mxCell id="fsCrZS-kw_3UYgfHhvLF-1426" edge="1" parent="1" source="fsCrZS-kw_3UYgfHhvLF-1424" style="endArrow=none;html=1;fontSize=9;strokeColor=#000;entryX=0.75;entryY=1;entryDx=0;entryDy=0;exitX=0;exitY=0;exitDx=0;exitDy=0;" target="fsCrZS-kw_3UYgfHhvLF-1261" value="(1,N)">
+          <mxGeometry relative="1" x="0.0062" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- research area indication → research area instance of (1,1) -->
+        <mxCell id="fsCrZS-kw_3UYgfHhvLF-1435" edge="1" parent="1" source="fsCrZS-kw_3UYgfHhvLF-1263" style="endArrow=none;html=1;fontSize=9;strokeColor=#000;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="fsCrZS-kw_3UYgfHhvLF-1434" value="(1,1)">
+          <mxGeometry relative="1" x="0.3978" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- research area → research area instance of (1,N) -->
+        <mxCell id="fsCrZS-kw_3UYgfHhvLF-1440" edge="1" parent="1" source="fsCrZS-kw_3UYgfHhvLF-1428" style="endArrow=none;html=1;fontSize=9;strokeColor=#000;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" target="fsCrZS-kw_3UYgfHhvLF-1434" value="(1,N)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ===== GENERALIZATION: reviewer ISA organizer (P) ===== -->
+
+        <mxCell id="fsCrZS-kw_3UYgfHhvLF-1406" edge="1" parent="1" source="fsCrZS-kw_3UYgfHhvLF-1405" style="endArrow=block;endFill=0;html=1;strokeColor=#000;strokeWidth=2;endSize=10;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" target="fsCrZS-kw_3UYgfHhvLF-1262">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="fsCrZS-kw_3UYgfHhvLF-1407" connectable="0" parent="fsCrZS-kw_3UYgfHhvLF-1406" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=12;" value="(P)" vertex="1">
+          <mxGeometry relative="1" x="-0.1382" y="2" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- ===== GENERALIZATION: article subtypes (T,E) ===== -->
+
+        <!-- generalization arc (horizontal line) -->
+        <mxCell id="fsCrZS-kw_3UYgfHhvLF-1410" edge="1" parent="1" style="endArrow=none;html=1;rounded=0;fontSize=12;startSize=8;endSize=8;curved=1;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="410" y="598" as="sourcePoint" />
+            <mxPoint x="700" y="598" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- generalization arrow (T,E) -->
+        <mxCell id="fsCrZS-kw_3UYgfHhvLF-1408" edge="1" parent="1" style="endArrow=blockThin;endFill=1;html=1;strokeColor=#000;strokeWidth=2;endSize=10;entryX=0.5;entryY=1;entryDx=0;entryDy=0;rounded=0;curved=1;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="570" y="598" as="sourcePoint" />
+            <mxPoint x="570" y="455" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fsCrZS-kw_3UYgfHhvLF-1409" connectable="0" parent="fsCrZS-kw_3UYgfHhvLF-1408" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=12;" value="(T,E)" vertex="1">
+          <mxGeometry relative="1" x="0.2343" y="-3" as="geometry">
+            <mxPoint x="-3" y="1" as="offset" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- subtype connections to arc -->
+        <mxCell id="fsCrZS-kw_3UYgfHhvLF-1420" edge="1" parent="1" style="endArrow=none;html=1;rounded=0;fontSize=12;startSize=8;endSize=8;curved=1;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="410" y="620" as="sourcePoint" />
+            <mxPoint x="410" y="598" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fsCrZS-kw_3UYgfHhvLF-1421" edge="1" parent="1" style="endArrow=none;html=1;rounded=0;fontSize=12;startSize=8;endSize=8;curved=1;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="483" y="620" as="sourcePoint" />
+            <mxPoint x="483" y="598" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fsCrZS-kw_3UYgfHhvLF-1422" edge="1" parent="1" style="endArrow=none;html=1;rounded=0;fontSize=12;startSize=8;endSize=8;curved=1;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="570" y="620" as="sourcePoint" />
+            <mxPoint x="570" y="598" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fsCrZS-kw_3UYgfHhvLF-1423" edge="1" parent="1" style="endArrow=none;html=1;rounded=0;fontSize=12;startSize=8;endSize=8;curved=1;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="635" y="620" as="sourcePoint" />
+            <mxPoint x="635" y="598" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fsCrZS-kw_3UYgfHhvLF-1412" edge="1" parent="1" style="endArrow=none;html=1;rounded=0;fontSize=12;startSize=8;endSize=8;curved=1;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="700" y="620" as="sourcePoint" />
+            <mxPoint x="700" y="598" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- membership/research area curve -->
+        <mxCell id="fsCrZS-kw_3UYgfHhvLF-1427" edge="1" parent="1" style="endArrow=none;html=1;rounded=0;fontSize=12;startSize=8;endSize=8;curved=1;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points">
+              <mxPoint x="860" y="218" />
+              <mxPoint x="955" y="255" />
+            </Array>
+            <mxPoint x="765" y="235" as="sourcePoint" />
+            <mxPoint x="925" y="295" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
